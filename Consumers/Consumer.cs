@@ -13,8 +13,9 @@ namespace Consumer.Consumers
         {
             string queueName = $"queue.{name}_{number}";
             string routingKey = $"cars.{number}";
-            /*
-            string routingKey = $"cars.*";
+            
+            //для topic
+            /*            
             if (number > 2)
             {
                 routingKey = $"bicycles.{number}";
@@ -24,7 +25,6 @@ namespace Consumer.Consumers
             using (var channel = connection.CreateModel())
             {
                 channel.BasicQos(0, 10, false);
-
                 channel.QueueDeclare(queueName, false, false, false, null);
                 channel.QueueBind(queueName, $"exchange.{name}", routingKey, null);
 
@@ -38,12 +38,9 @@ namespace Consumer.Consumers
                     var body = e.Body;
                     var message = JsonSerializer.Deserialize<MessageDto>(Encoding.UTF8.GetString(body.ToArray()));
                     Console.WriteLine("  Received message: {0}", message.Content);
-                    channel.BasicAck(e.DeliveryTag, false);
                 };
 
-                channel.BasicConsume(queue: queueName,
-                    autoAck: false,
-                    consumer: consumer);
+                channel.BasicConsume(queueName, true, consumer);
 
                 Console.WriteLine("Subscribed to the queue");
 

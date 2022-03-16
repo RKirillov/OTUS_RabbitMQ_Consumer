@@ -6,11 +6,10 @@ namespace Consumer
     {
         static void Main(string[] args)
         {
-            //Consumers.Consumer.Register(GetRabbitConnection(), "direct", int.Parse(args[0]));
+            Consumers.Consumer.Register(GetRabbitConnection(), "direct", int.Parse(args[0]));
             //Consumers.Consumer.Register(GetRabbitConnection(), "fanout", int.Parse(args[0]));
-            Consumers.Consumer.Register(GetRabbitConnection(), "topic", int.Parse(args[0]));
+            //Consumers.Consumer.Register(GetRabbitConnection(), "topic", int.Parse(args[0]));
             //Consumers.Consumer.Register(GetRabbitConnection(), "direct.instant", int.Parse(args[0]));
-
         }
 
         static private IConnection GetRabbitConnection()
