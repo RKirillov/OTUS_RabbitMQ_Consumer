@@ -33,14 +33,14 @@ namespace Consumer.Consumers
                 consumer.Received += (sender, e) =>
                 {
                     Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")} Received message");
-
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     var body = e.Body;
                     var message = JsonSerializer.Deserialize<MessageDto>(Encoding.UTF8.GetString(body.ToArray()));
                     Console.WriteLine("  Received message: {0}", message.Content);
+                    channel.BasicAck(e.DeliveryTag, false);
                 };
 
-                channel.BasicConsume(queueName, true, consumer);
+                channel.BasicConsume(queueName, false, consumer);
 
                 Console.WriteLine("Subscribed to the queue");
 
