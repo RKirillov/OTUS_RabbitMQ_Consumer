@@ -16,10 +16,10 @@ namespace Consumer
         {
             ConnectionFactory factory = new ConnectionFactory
             {
-                UserName = "ykziztbb",
-                Password = "oZaUpy2Sru1P0b04K9ghjx3MSFpXTMIU",
-                VirtualHost = "ykziztbb",
-                HostName = "hawk.rmq.cloudamqp.com"
+                UserName = "xvvcjzoi",
+                Password = "3zzqgto8t6iqz6EMWhrx3fj8ubnToHJ6",
+                VirtualHost = "xvvcjzoi",
+                HostName = "cow.rmq2.cloudamqp.com"
             };
             IConnection conn = factory.CreateConnection();
             return conn;

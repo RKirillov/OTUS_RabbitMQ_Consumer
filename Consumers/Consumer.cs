@@ -15,10 +15,10 @@ namespace Consumer.Consumers
             string routingKey = $"cars.{number}";
             
             //для topic
-            /*            
+            /*
             if (number > 2)
             {
-                routingKey = $"bicycles.{number}";
+                routingKey = $"*.1";
             }
             */
             using (var connection = connectionInfo)
@@ -42,7 +42,7 @@ namespace Consumer.Consumers
 
                 channel.BasicConsume(queueName, false, consumer);
 
-                Console.WriteLine("Subscribed to the queue");
+                Console.WriteLine($"Subscribed to the queue with key {routingKey}");
 
                 Console.ReadLine();
             }
