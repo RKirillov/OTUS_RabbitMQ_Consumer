@@ -9,44 +9,31 @@ namespace Consumer.Consumers
 {
     public static class Consumer
     {
-        public static void Register(IConnection connectionInfo, string name, int number)
+        public static void Register(IModel model, string exchangeName, string queueName, string routingKey)
         {
-            string queueName = $"queue.{name}_{number}";
-            string routingKey = $"cars.{number}";
-            
-            //для topic
-            /*
-            if (number > 2)
-            {
-                routingKey = $"*.1";
-            }
-            */
-            using (var connection = connectionInfo)
-            using (var channel = connection.CreateModel())
-            {
-                channel.BasicQos(0, 10, false);
-                channel.QueueDeclare(queueName, false, false, false, null);
-                channel.QueueBind(queueName, $"exchange.{name}", routingKey, null);
+                model.BasicQos(0, 10, false);
+                model.QueueDeclare(queueName, false, false, false, null);
+                model.QueueBind(queueName, exchangeName, routingKey, null);
 
-                var consumer = new EventingBasicConsumer(channel);
+                var consumer = new EventingBasicConsumer(model);
 
                 consumer.Received += (sender, e) =>
                 {
                     //throw new Exception("Error has occured");
                     Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")} Received message");
-                    Thread.Sleep(TimeSpan.FromSeconds(2));
                     var body = e.Body;
                     var message = JsonSerializer.Deserialize<MessageDto>(Encoding.UTF8.GetString(body.ToArray()));
                     Console.WriteLine("  Received message: {0}", message.Content);
-                    channel.BasicAck(e.DeliveryTag, false);
+                    model.BasicAck(e.DeliveryTag, false);
+                    
+                    Thread.Sleep(TimeSpan.FromSeconds(2)); // Имитация долгой обработки
                 };
 
-                channel.BasicConsume(queueName, false, consumer);
+                model.BasicConsume(queueName, false, consumer);
 
                 Console.WriteLine($"Subscribed to the queue with key {routingKey}");
 
                 Console.ReadLine();
-            }
         }
     }
 }

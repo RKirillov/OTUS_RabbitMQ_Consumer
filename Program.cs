@@ -12,13 +12,17 @@ namespace Consumer
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
-            //Consumers.Consumer.Register(GetRabbitConnection(), "direct", int.Parse(args[0])); 
-            //Consumers.Consumer.Register(GetRabbitConnection(), "fanout", int.Parse(args[0]));
-            //Consumers.Consumer.Register(GetRabbitConnection(), "topic", int.Parse(args[0]));
-            Consumers.Consumer.Register(GetRabbitConnection(configuration), "direct.instant", int.Parse(args[0]));
-        }
+            var consumerNumber = int.Parse(args[0]);
 
-        static private IConnection GetRabbitConnection(IConfiguration configuration)
+            var connection = GetRabbitConnection(configuration);
+            var channel = connection.CreateModel();
+            
+            Consumers.Consumer.Register(channel, $"exchange.direct", $"queue.direct_{consumerNumber}",  $"cars.{consumerNumber}");
+            //Consumers.Consumer.Register(model, $"exchange.fanout", $"queue.fanout_{consumerNumber}",  $"cars.{consumerNumber}");
+            //Consumers.Consumer.Register(model, $"exchange.topic", $"queue.topic_{consumerNumber}",  consumerNumber > 2 ? "*.1": $"cars.{consumerNumber}");
+        }
+        
+        private static IConnection GetRabbitConnection(IConfiguration configuration)
         {
             var rmqSettings = configuration.Get<ApplicationSettings>().RmqSettings;
             ConnectionFactory factory = new ConnectionFactory
