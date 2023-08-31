@@ -1,4 +1,6 @@
-﻿using RabbitMQ.Client;
+﻿using Consumer.Settings;
+using Microsoft.Extensions.Configuration;
+using RabbitMQ.Client;
 
 namespace Consumer
 {
@@ -6,20 +8,25 @@ namespace Consumer
     {
         static void Main(string[] args)
         {
-            //Consumers.Consumer.Register(GetRabbitConnection(), "direct", int.Parse(args[0]));
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            //Consumers.Consumer.Register(GetRabbitConnection(), "direct", int.Parse(args[0])); 
             //Consumers.Consumer.Register(GetRabbitConnection(), "fanout", int.Parse(args[0]));
             //Consumers.Consumer.Register(GetRabbitConnection(), "topic", int.Parse(args[0]));
-            Consumers.Consumer.Register(GetRabbitConnection(), "direct.instant", int.Parse(args[0]));
+            Consumers.Consumer.Register(GetRabbitConnection(configuration), "direct.instant", int.Parse(args[0]));
         }
 
-        static private IConnection GetRabbitConnection()
+        static private IConnection GetRabbitConnection(IConfiguration configuration)
         {
+            var rmqSettings = configuration.Get<ApplicationSettings>().RmqSettings;
             ConnectionFactory factory = new ConnectionFactory
             {
-                UserName = "xvvcjzoi",
-                Password = "3zzqgto8t6iqz6EMWhrx3fj8ubnToHJ6",
-                VirtualHost = "xvvcjzoi",
-                HostName = "cow.rmq2.cloudamqp.com"
+                HostName = rmqSettings.Host,
+                VirtualHost = rmqSettings.VHost,
+                UserName = rmqSettings.Login,
+                Password = rmqSettings.Password,
             };
             IConnection conn = factory.CreateConnection();
             return conn;

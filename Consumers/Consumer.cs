@@ -32,6 +32,7 @@ namespace Consumer.Consumers
 
                 consumer.Received += (sender, e) =>
                 {
+                    //throw new Exception("Error has occured");
                     Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff")} Received message");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     var body = e.Body;
