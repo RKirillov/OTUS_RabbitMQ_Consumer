@@ -18,8 +18,8 @@ namespace Consumer
             var channel = connection.CreateModel();
             
             Consumers.Consumer.Register(channel, $"exchange.direct", $"queue.direct_{consumerNumber}",  $"cars.{consumerNumber}");
-            //Consumers.Consumer.Register(model, $"exchange.fanout", $"queue.fanout_{consumerNumber}",  $"cars.{consumerNumber}");
-            //Consumers.Consumer.Register(model, $"exchange.topic", $"queue.topic_{consumerNumber}",  consumerNumber > 2 ? "*.1": $"cars.{consumerNumber}");
+            //Consumers.Consumer.Register(channel, $"exchange.fanout", $"queue.fanout_{consumerNumber}",  $"cars.{consumerNumber}");
+            //Consumers.Consumer.Register(channel, $"exchange.topic", $"queue.topic_{consumerNumber}",  consumerNumber > 2 ? "*.1": $"cars.{consumerNumber}");
         }
         
         private static IConnection GetRabbitConnection(IConfiguration configuration)
