@@ -13,8 +13,9 @@ namespace Consumer
                 .Build();
 
             var consumerNumber = int.Parse(args[0]);
-
+            //связь с докер физический канал связи
             var connection = GetRabbitConnection(configuration);
+            //виртуальный канал, вся работа через него. потом закроем.
             var channel = connection.CreateModel();
             
             Consumers.Consumer.Register(channel, $"exchange.direct", $"queue.direct_{consumerNumber}",  $"cars.{consumerNumber}");
