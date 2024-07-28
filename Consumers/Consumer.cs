@@ -11,7 +11,9 @@ namespace Consumer.Consumers
     {
         public static void Register(IModel channel, string exchangeName, string queueName, string routingKey)
         {
+            //настройки очереди объем в байтах за 1 раз, количество сообщений за 1 раз, global - ко всем или одному
                 channel.BasicQos(0, 10, false);
+            //durable  - должна ли очередь сохраняться после перезапуска, exclusive - удалиться после закрытия коннекта, autodelete - удалдиться после отписки консюмера
                 channel.QueueDeclare(queueName, false, false, false, null);
                 //привязываю очередь к обменнику, который задали вы продюсере, далее работаем с очередью
                 channel.QueueBind(queueName, exchangeName, routingKey, null);

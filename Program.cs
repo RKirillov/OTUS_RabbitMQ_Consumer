@@ -12,7 +12,7 @@ namespace Consumer
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
-            var consumerNumber = int.Parse(args[0]);
+            var consumerNumber = int.Parse("1");
             //связь с докер физический канал связи
             var connection = GetRabbitConnection(configuration);
             //виртуальный канал, вся работа через него. потом закроем.
