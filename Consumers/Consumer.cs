@@ -29,7 +29,7 @@ namespace Consumer.Consumers
                     channel.BasicAck(e.DeliveryTag, false);
                     Thread.Sleep(TimeSpan.FromSeconds(2)); // Имитация долгой обработки
                 };
-
+                //запуск консюмера, брокер будет в него пушить.
                 channel.BasicConsume(queueName, false, consumer);
                 Console.WriteLine($"Subscribed to the queue with key {routingKey} (exchange name: {exchangeName})");
                 Console.ReadLine();
